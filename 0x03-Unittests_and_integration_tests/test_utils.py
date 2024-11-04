@@ -5,8 +5,8 @@ Unittest For the Utils module
 
 import unittest
 from parameterized import parameterized
-from utils import access_nested_map
-
+from utils import access_nested_map, get_json
+from unittest.mock import Mock, patch
 
 class TestAccessNestedMap(unittest.TestCase):
     """
@@ -37,3 +37,21 @@ class TestAccessNestedMap(unittest.TestCase):
             access_nested_map(np, path)
 
         self.assertEqual(str(context.exception), expected)
+
+    @parameterized.expand([
+        ("http://example.com", {"payload": True}),
+        ("http://holberton.io", {"payload": False})
+        ])
+    @patch("requests.get")
+    def test_get_json(self, url, payload, mock_get):
+        """
+        Test get_json() method with mocked data
+        """
+        mock = Mock()
+        mock.json.return_value = payload
+        mock_get.return_value = mock
+
+        result = get_json(url)
+
+        mock_get.assert_called_once_with(url)
+        self.assertEqual(result, payload)
