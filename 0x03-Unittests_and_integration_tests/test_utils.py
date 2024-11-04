@@ -11,7 +11,7 @@ from unittest.mock import Mock, patch
 
 class TestAccessNestedMap(unittest.TestCase):
     """
-    Test class for utils
+    Test class for utils access_nested_map
     """
     @parameterized.expand([
         ({"a": 1}, ("a",), 1),
@@ -39,6 +39,11 @@ class TestAccessNestedMap(unittest.TestCase):
 
         self.assertEqual(str(context.exception), expected)
 
+
+class TestGetJson(unittest.TestCase):
+    """
+    Test class for utils get_json
+    """
     @parameterized.expand([
         ("http://example.com", {"payload": True}),
         ("http://holberton.io", {"payload": False})
