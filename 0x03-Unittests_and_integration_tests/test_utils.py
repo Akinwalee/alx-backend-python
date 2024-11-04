@@ -5,7 +5,7 @@ Unittest For the Utils module
 
 import unittest
 from parameterized import parameterized
-from utils import access_nested_map, get_json
+from utils import access_nested_map, get_json, memoize
 from unittest.mock import Mock, patch
 
 
@@ -61,3 +61,28 @@ class TestGetJson(unittest.TestCase):
 
         mock_get.assert_called_once_with(test_url)
         self.assertEqual(result, test_payload)
+
+
+class TestMemoize(unittest.TestCase):
+    """
+    Test class for memoize()
+    """
+    def test_memoize(self):
+        class TestClass:
+
+            def a_method(self):
+                return 42
+
+            @memoize
+            def a_property(self):
+                return self.a_method()
+
+        test = TestClass()
+
+        with patch.object(test, 'a_method', return_value=42) as mock_method:
+            call_1 = test.a_property
+            call_2 = test.a_property
+
+            self.assertEqual(call_1, 42)
+            self.assertEqual(call_2, 42)
+            mock_method.assert_called_once()
